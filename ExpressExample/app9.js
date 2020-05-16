@@ -6,6 +6,8 @@ var bodyParser = require('body-parser')
     ,static = require('serve-static');
 
 var app = express();
+var expressErrorHandler = require('express-error-handler');
+
 app.set('port', process.env.PORT || 3000);
 // body-parser를 사용해 application/x-www-form-urlencoded 파싱
 app.use(bodyParser.urlencoded({extended:false}));
@@ -29,11 +31,18 @@ router.route('/process/login').post(function(req, res){
     res.end();
 });
 
-app.all('*',function(req,res){
-    res.status(404).send('<h1>ERROR - 페이지를 찾을 수 없습니다.</h1>');
+
+var errorHandler = expressErrorHandler({
+    static:{
+        '404':'./public/404.html'
+    }
 });
+
 // 라우터 객체를 app객체에 등록
 app.use('/', router);
+
+app.use(expressErrorHandler.httpError(404));
+app.use(errorHandler);
 
 http.createServer(app).listen(3000,function(){
     console.log('서버가 3000번 포트에서 시작됨');
