@@ -9,5 +9,5 @@ app.use(function(req, res, next){
 });
 
 http.createServer(app).listen(3000,function(){
-    console.log('서버가 300번 포트에서 시작됨');
+    console.log('서버가 3000번 포트에서 시작됨');
 });
